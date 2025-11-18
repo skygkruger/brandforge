@@ -1,0 +1,59 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+:root {
+  color-scheme: dark;
+}
+
+@keyframes float-slow {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(0, -14px, 0) scale(1.04);
+  }
+}
+
+@keyframes float-slower {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(0, 10px, 0) scale(1.02);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 22s ease-in-out infinite alternate;
+}
+
+.animate-float-slower {
+  animation: float-slower 32s ease-in-out infinite alternate;
+}
+
+
+/* Spotlight cursor overlay */
+.spotlight-layer {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    rgba(255, 255, 255, 0.06),
+    transparent 55%
+  );
+  mix-blend-mode: soft-light;
+  opacity: 0.8;
+  transition: background 120ms ease-out;
+}
+
+/* Subtle noise texture */
+.bf-bg-noise::after {
+  content: '';
+  pointer-events: none;
+  position: fixed;
+  inset: -50px;
+  opacity: 0.25;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
