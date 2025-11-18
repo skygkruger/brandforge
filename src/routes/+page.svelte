@@ -121,13 +121,14 @@
 
           <!-- Prompt + button -->
           <div class="space-y-4">
-            <label class="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
+            <label for="prompt" class="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
               Your idea
             </label>
 
             <div class="bf-glass-card group relative">
               <div class="relative flex flex-col gap-3 p-4 sm:p-5">
                 <textarea
+                  id="prompt"
                   bind:value={prompt}
                   rows="3"
                   placeholder="Example: A minimalist cloud consultancy helping small businesses modernize without enterprise drama."
