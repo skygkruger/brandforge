@@ -5,12 +5,69 @@
   color-scheme: dark;
 }
 
+:root {
+  color-scheme: dark;
+}
+
+/* === Ambient noise & spotlight tied to cursor === */
+
+.bf-bg-noise {
+  position: relative;
+}
+
+.bf-bg-noise::after {
+  content: '';
+  pointer-events: none;
+  position: fixed;
+  inset: -50px;
+  opacity: 0.22;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
+}
+
+.spotlight-layer {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    rgba(255, 255, 255, 0.065),
+    transparent 58%
+  );
+  mix-blend-mode: soft-light;
+  opacity: 0.9;
+  transition: background 140ms ease-out;
+}
+
+/* Soft cursor orb that “rides” the surface */
+
+.bf-cursor-orb {
+  pointer-events: none;
+  position: fixed;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(248, 250, 252, 0.9), transparent 70%);
+  mix-blend-mode: soft-light;
+  opacity: 0.45;
+  transform: translate3d(
+      calc(var(--spot-x, 50%) * 1vw - 50%),
+      calc(var(--spot-y, 50%) * 1vh - 50%),
+      0
+    );
+  transition:
+    opacity 0.15s ease-out,
+    transform 0.12s ease-out;
+}
+
+/* === Slow motion / parallax === */
+
 @keyframes float-slow {
   0% {
     transform: translate3d(0, 0, 0) scale(1);
   }
   100% {
-    transform: translate3d(0, -14px, 0) scale(1.04);
+    transform: translate3d(0, -12px, 0) scale(1.04);
   }
 }
 
@@ -24,36 +81,156 @@
 }
 
 .animate-float-slow {
-  animation: float-slow 22s ease-in-out infinite alternate;
+  animation: float-slow 24s ease-in-out infinite alternate;
 }
 
 .animate-float-slower {
-  animation: float-slower 32s ease-in-out infinite alternate;
+  animation: float-slower 36s ease-in-out infinite alternate;
 }
 
+/* Tilt shell – camera-like perspective tied to cursor */
 
-/* Spotlight cursor overlay */
-.spotlight-layer {
-  pointer-events: none;
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(
-    circle at var(--spot-x, 50%) var(--spot-y, 50%),
-    rgba(255, 255, 255, 0.06),
-    transparent 55%
-  );
-  mix-blend-mode: soft-light;
-  opacity: 0.8;
-  transition: background 120ms ease-out;
+.bf-tilt-shell {
+  transform-style: preserve-3d;
+  transform: perspective(1400px)
+    rotateX(var(--tilt-y, 0deg))
+    rotateY(var(--tilt-x, 0deg));
+  transition: transform 180ms ease-out;
 }
 
-/* Subtle noise texture */
-.bf-bg-noise::after {
+/* === Molten obsidian panels === */
+
+.bf-liquid-panel {
+  position: relative;
+  border-radius: 2.1rem;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(248, 250, 252, 0.18), transparent 55%),
+    radial-gradient(circle at 100% 100%, rgba(15, 23, 42, 0.98), transparent 60%),
+    conic-gradient(from 220deg at 50% 20%, #020308, #020617, #020617, #050816, #020308);
+  box-shadow:
+    0 46px 160px rgba(0, 0, 0, 1),
+    inset 0 0 0 1px rgba(15, 23, 42, 0.95),
+    inset 0 0 30px rgba(15, 23, 42, 0.9);
+  overflow: hidden;
+}
+
+.bf-liquid-panel-right {
+  position: relative;
+  border-radius: 2.1rem;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(148, 163, 184, 0.24), transparent 55%),
+    radial-gradient(circle at 0% 100%, rgba(15, 23, 42, 0.95), transparent 55%),
+    conic-gradient(from 140deg at 40% 10%, #020308, #020617, #050816, #020617, #020308);
+  box-shadow:
+    0 46px 160px rgba(0, 0, 0, 1),
+    inset 0 0 0 1px rgba(15, 23, 42, 0.95),
+    inset 0 0 26px rgba(15, 23, 42, 0.9);
+  overflow: hidden;
+}
+
+/* Shared glossy sheen on molten panels */
+
+.bf-liquid-panel::before,
+.bf-liquid-panel-right::before {
   content: '';
+  position: absolute;
+  inset: -140%;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(255, 255, 255, 0.22), transparent 60%),
+    linear-gradient(120deg, rgba(255, 255, 255, 0.3) 0%, transparent 35%, transparent 70%);
+  opacity: 0.7;
+  mix-blend-mode: screen;
   pointer-events: none;
-  position: fixed;
-  inset: -50px;
-  opacity: 0.25;
-  mix-blend-mode: soft-light;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+/* === Frosted glass inner cards === */
+
+.bf-glass-card {
+  position: relative;
+  border-radius: 1.6rem;
+  border: 1px solid rgba(148, 163, 184, 0.55);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(148, 163, 184, 0.22), transparent 60%),
+    linear-gradient(150deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.86));
+  box-shadow:
+    0 26px 70px rgba(15, 23, 42, 0.9),
+    inset 0 0 0 1px rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(26px) saturate(130%);
+  overflow: hidden;
+}
+
+.bf-glass-card::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), transparent 32%, transparent),
+    radial-gradient(circle at 85% 0%, rgba(255, 255, 255, 0.16), transparent 55%);
+  mix-blend-mode: screen;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* === Black obsidian + silver trim button === */
+
+.bf-metal-button {
+  position: relative;
+  overflow: hidden;
+  border-radius: 999px;
+  padding: 0.55rem 1.6rem;
+
+  background:
+    linear-gradient(180deg, #0c0c0c, #050505 60%, #000000),
+    radial-gradient(circle at 30% 0%, rgba(255,255,255,0.12), transparent 55%);
+  
+  border: 1px solid rgba(214, 219, 220, 0.55);
+
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.75),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    inset 0 0 16px rgba(255, 255, 255, 0.04);
+
+  color: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 6px rgba(255,255,255,0.25);
+
+  transition:
+    transform 0.25s cubic-bezier(0.19, 1, 0.22, 1),
+    box-shadow 0.25s cubic-bezier(0.19, 1, 0.22, 1),
+    border-color 0.25s ease;
+}
+
+.bf-metal-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.75);
+  box-shadow:
+    0 18px 38px rgba(0, 0, 0, 0.9),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    inset 0 0 26px rgba(255, 255, 255, 0.06);
+}
+
+/* Light sweep */
+
+.bf-metal-button::before {
+  content: '';
+  position: absolute;
+  inset: -40%;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.5) 40%,
+    transparent 75%
+  );
+  transform: translateX(-200%);
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.bf-metal-button:hover::before {
+  transform: translateX(200%);
+  transition: transform 1.3s cubic-bezier(0.19, 1, 0.22, 1);
 }
